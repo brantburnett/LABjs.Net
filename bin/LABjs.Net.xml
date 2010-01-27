@@ -1,0 +1,369 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+LABjs.Net
+</name>
+</assembly>
+<members>
+<member name="P:LABjs.Net.LabWait.InlineScript">
+	<summary>
+ Inline script that is executed when the wait is completed.
+ </summary>
+	<remarks>By default, you can include an outer pair &lt;script&gt;&lt;/script&gt; tags in your inline script so that Visual Studio syntax highlighting will work.</remarks>
+</member><member name="P:LABjs.Net.LabWait.CacheKey">
+	<summary>
+ Set to an application wide unique key to cache the parsed inline script in the ASP.Net cache
+ </summary>
+	<remarks>This can improve efficiency when you're using DetectScriptTags, and has no effect otherwise.  Be certain that this key is unique to your entire application.  Having two different inline scripts with the same cache key anywhere on your site will cause unexpected results.</remarks>
+</member><member name="P:LABjs.Net.LabWait.DetectScriptTags">
+	<summary>
+ If enabled, you can include an outer pair &lt;script&gt;&lt;/script&gt; tags in your inline script.
+ </summary>
+	<remarks>Defaults to true.  Setting to false can provide a marginal performance improvement if you're not using script tags.</remarks>
+</member><member name="P:LABjs.Net.LabWait.Name">
+	<summary>
+ Specifies a name for the LabWait 
+ </summary>
+	<remarks>
+ This is used in combination with LabScriptManagerProxy controls and LabActionGroups.  LabActionGroups specify an InsertAt
+ property, and all of their actions are added to the chain in front of the LabWait with that name.  They can also contain
+ a LabWait at the end of their action list, which will merge the inline scripts with the named LabWait's script.
+ </remarks>
+</member><member name="P:LABjs.Net.LabWait.IsEmpty">
+	<summary>
+ Returns true if this wait doesn't contain an inline script
+ </summary>
+</member><member name="M:LABjs.Net.LabWait.ParseInlineScript(System.Web.Caching.Cache)">
+	<summary>
+ Returns the parsed inline script, removing any script tags if DetectScriptTags is set to true
+ </summary>
+	<param name="cache">Application-wide Cache to be used to store the parsed result, if CacheKey has been set</param>
+</member><member name="T:LABjs.Net.LabWait">
+	<summary>
+ Represents a wait() action in the $LAB chain, with an optional inline script to be executed when the wait completes
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptReference.Alternate">
+	<summary>
+ Specifies an alternate URL to load if the CDN load fails
+ </summary>
+	<remarks>Has no effect unless a Test is also specified</remarks>
+</member><member name="P:LABjs.Net.LabScriptReference.Assembly">
+	<summary>
+ Assembly name where the script resource is located
+ </summary>
+	<remarks>Name must also be specified</remarks>
+</member><member name="P:LABjs.Net.LabScriptReference.DebugNameStyle">
+	<summary>
+ Specifies how the script name is altered if operating in debug mode
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptReference.Path">
+	<summary>
+ Path to the script file.  Can be either absolute or application relative.
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptReference.Name">
+	<summary>
+ Name of the script resource
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptReference.ScriptMode">
+	<summary>
+ Specifies the script mode to use when loading this script
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptReference.Test">
+	<summary>
+ Specifies the test used to determine if the CDN load succeeded
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks>
+ Has no effect unless an Alternate is also specified.
+ Can be a period-delimited property chain to test for existence (i.e "jQuery" or "jQuery.fn.metadata")
+ Can also be a function which is called, which returns true if the library was loaded successfully
+ </remarks>
+</member><member name="P:LABjs.Net.LabScriptReference.Type">
+	<summary>
+ MIME type of the script
+ </summary>
+	<remarks>Defaults to "text/javascript"</remarks>
+</member><member name="P:LABjs.Net.LabScriptReference.CharSet">
+	<summary>
+ Character set of the script, if any should be specified
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptReference.AllowDuplicates">
+	<summary>
+ Can override the AllowDuplicates setting from the LabScriptManager for this reference only
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptReference.Wait">
+	<summary>
+ If enabled, LABjs should always wait for this script to load before continuing
+ </summary>
+	<remarks>Defaults to false</remarks>
+</member><member name="P:LABjs.Net.LabScriptReference.AutoSecure">
+	<summary>
+ If enabled, automatically changes http: urls to https: if a secure connection is being used for the page
+ </summary>
+	<remarks>Defaults to true</remarks>
+</member><member name="M:LABjs.Net.LabScriptReference.GetUrl(LABjs.Net.LabRenderContext)">
+	<summary>
+ Returns the URL to use to reference this script
+ </summary>
+	<param name="context">LabRenderContext to use</param>
+</member><member name="M:LABjs.Net.LabScriptReference.GetParameter(LABjs.Net.LabRenderContext)">
+	<summary>
+ Gets the parameters to pass to the script() method on $LAB
+ </summary>
+	<param name="context">LabRenderContext to use</param>
+</member><member name="T:LABjs.Net.LabScriptReference">
+	<summary>
+ Adds a script() call to the $LAB chain
+ </summary>
+	<remarks>
+ Options can be specified using the provided properties.
+ You can refer to a URL using the Path property, or to an assembly resource using the Assembly and Name properties.
+ </remarks>
+</member><member name="P:LABjs.Net.Internal.LabMerge.Actions">
+	<summary>
+ List of actions to be included before the final wait() call
+ </summary>
+</member><member name="P:LABjs.Net.Internal.LabMerge.Waits">
+	<summary>
+ List of LabWaits to be merged together
+ </summary>
+</member><member name="T:LABjs.Net.Internal.LabMerge">
+	<summary>
+ Used internally to merge multiple LabWaits together into a single wait() call
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptManagerProxy.Actions">
+	<summary>
+ List of actions to be appended to the LabScriptManager's actions
+ </summary>
+	<remarks>You may also include LabActionGroups, which can be inserted at specific points in the LabScriptManager's action list</remarks>
+</member><member name="P:LABjs.Net.LabScriptManagerProxy.Priority">
+	<summary>
+ Controls the priority of this proxy relative to other proxies on the page
+ </summary>
+	<remarks>Defaults to zero.  Equal priorties will be in page order.</remarks>
+</member><member name="T:LABjs.Net.LabScriptManagerProxy">
+	<summary>
+ Adds additional actions to the LabScriptManager's chain
+ </summary>
+	<remarks>Must be included on the page after the LabScriptManager.  Primarily used by content pages and user controls.</remarks>
+</member><member name="M:LABjs.Net.LabScriptManager.GetCurrent(System.Web.UI.Page)">
+	<summary>
+ Returns the LabScriptManager registered on the Page
+ </summary>
+	<param name="page">Page the retrieve the LabScriptManager from</param>
+	<returns>LabScriptManager for the Page</returns>
+</member><member name="P:LABjs.Net.LabScriptManager.Actions">
+	<summary>
+ List of actions to be performed on $LAB
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptManager.CdnWaitTime">
+	<summary>
+ Amount of time to wait, in milliseconds, before assuming that CDN script load failed
+ </summary>
+	<remarks>Used to get around Opera and Firefox not firing load events for failed script tags</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.DebugNameStyle">
+	<summary>
+ Specifies how the script name is altered if operating in debug mode
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptManager.EnableCdnFailover">
+	<summary>
+ If true, then cdnLABjs is loaded along with LABjs in order to support CDN failover
+ </summary>
+	<remarks>This has no effect if LabUrl is specified.  In that case, you must include cdnLABjs as part of the script loaded by LabUrl.</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.IsDebuggingEnabled">
+	<summary>
+ Returns true if debug scripts should be used
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptManager.LabUrl">
+	<summary>
+ Specifies a custom URL to use for the LABjs file.  By default, uses the resource included with the library.
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptManager.Proxies">
+	<summary>
+ List of the LabScriptManagerProxies registered on the page
+ </summary>
+</member><member name="P:LABjs.Net.LabScriptManager.ScriptMode">
+	<summary>
+ Specifies what mode should be used when rendering script calls
+ </summary>
+	<remarks>Auto or Inherit will choose the mode based upon the web.config file</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.AlwaysPreserveOrder">
+	<summary>
+ If true, an implicit wait() call is included after each script, causing all scripts to always be loaded in the order they are specified
+ </summary>
+	<remarks>Defaults to false</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.UsePreloading">
+	<summary>
+ If true, attempts to use preloading to load scripts in parallel
+ </summary>
+	<remarks>Defauls to true</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.UseLocalXHR">
+	<summary>
+ If true, an XHR AJAX call will be used to load scripts that are local to the domain of the page
+ </summary>
+	<remarks>Defaults to true</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.UseCachePreload">
+	<summary>
+ If true, will using text/html caching to allow scripts to load but delay execution until the proper point in the chain
+ </summary>
+	<remarks>Defaults to true</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.AllowDuplicates">
+	<summary>
+ If false, LABjs will test for duplicate scripts and prevent them from loading.  Adds a slight client performance penalty.
+ </summary>
+	<remarks>Defaults to true</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.AppendTo">
+	<summary>
+ Can be either "head" or "body".  Controls the DOM element the scripts will be appended to
+ </summary>
+	<remarks>Defaults to "head"</remarks>
+</member><member name="P:LABjs.Net.LabScriptManager.BasePath">
+	<summary>
+ Specifies a base path to be prepended to all relative URLs
+ </summary>
+</member><member name="E:LABjs.Net.LabScriptManager.Rendering">
+	<summary>
+ Allows modification of the list of actions being rendered
+ </summary>
+	<remarks></remarks>
+</member><member name="M:LABjs.Net.LabScriptManager.RegisterProxy(LABjs.Net.LabScriptManagerProxy)">
+	<summary>
+ Register a LabScriptManagerProxy to be included
+ </summary>
+	<param name="proxy">LabScriptManagerProxy to be registered</param>
+</member><member name="M:LABjs.Net.LabScriptManager.CreateRenderContext">
+	<summary>
+ Generates the LabRenderContext to be used by the rendering process
+ </summary>
+	<returns>New LabRenderContext</returns>
+</member><member name="M:LABjs.Net.LabScriptManager.GetLabReferenceUrl(LABjs.Net.LabRenderContext)">
+	<summary>
+ Returns the URL for LABjs, based upon the LabUrl property and the rendering context
+ </summary>
+	<param name="context">LabRenderContext to use when getting the URL</param>
+	<returns>Relative or absolute reference to LABjs</returns>
+</member><member name="M:LABjs.Net.LabScriptManager.GetActions(LABjs.Net.LabRenderContext)">
+	<summary>
+ Returns a list of actions to be performed on $LAB, merging in any LabScriptManagerProxy controls
+ </summary>
+	<param name="context">LabRenderContext to use</param>
+	<returns>List of actions to be performed on $LAB</returns>
+</member><member name="M:LABjs.Net.LabScriptManager.MergeWaits(LABjs.Net.LabActionCollection)">
+	<summary>
+ Merges adjacent LabMerges and LabWaits in the list of actions
+ </summary>
+	<param name="actions">List of actions to be merged.  Collection is modified in place.</param>
+</member><member name="M:LABjs.Net.LabScriptManager.RenderLabReference(System.Text.StringBuilder,LABjs.Net.LabRenderContext)">
+	<summary>
+ Renders the script block that includes LABjs
+ </summary>
+	<param name="writer">StringBuilder to render to</param>
+	<param name="context">LabRenderContext to use while rendering</param>
+</member><member name="M:LABjs.Net.LabScriptManager.RenderOptions(System.Text.StringBuilder,LABjs.Net.LabRenderContext)">
+	<summary>
+ Renders the setOptions call on $LAB
+ </summary>
+	<param name="writer">StringBuilder to render to</param>
+	<param name="context">LabRenderContext to use while rendering</param>
+</member><member name="M:LABjs.Net.LabScriptManager.RenderScripts(System.Text.StringBuilder,LABjs.Net.LabRenderContext)">
+	<summary>
+ Renders the script block that calls LABjs with options and actions
+ </summary>
+	<param name="writer">StringBuilder to render to</param>
+	<param name="context">LabRenderContext to use while rendering</param>
+	<remarks></remarks>
+</member><member name="T:LABjs.Net.LabScriptManager">
+	<summary>
+ Registers Javascript files using the LABjs parallel loading system
+ </summary>
+	<remarks>There can only be one LabScriptManager per page.  Must be included on the page before any LabScriptManagerProxy controls.</remarks>
+</member><member name="P:LABjs.Net.LabRenderingEventArgs.Actions">
+	<summary>
+ Sorted list of actions to be included in the $LAB chain
+ </summary>
+	<remarks>This list may be modified, and the resulting list will be used instead</remarks>
+</member><member name="P:LABjs.Net.LabActionGroup.InsertAt">
+	<summary>
+ Name of the LabWait in the LabScriptManager where the actions should be inserted at
+ </summary>
+	<remarks>
+ Actions are inserted in the chain before the targeted LabWait.
+ If the name is not found, the actions are inserted at the end of the chain.
+ </remarks>
+</member><member name="P:LABjs.Net.LabActionGroup.Actions">
+	<summary>
+ List of actions to be inserted
+ </summary>
+	<remarks>This list can only include a single LabWait, and this must be the last action in the list</remarks>
+</member><member name="T:LABjs.Net.LabActionGroup">
+	<summary>
+ Used to insert a set of actions at a specific point in the $LAB chain
+ </summary>
+	<remarks>Can only be used with a LabScriptManagerProxy</remarks>
+</member><member name="M:LABjs.Net.LabAction.Render(System.Text.StringBuilder,LABjs.Net.LabRenderContext)">
+	<summary>
+ Renders the action to the $LAB chain
+ </summary>
+	<param name="writer">StringBuilder to render to</param>
+	<param name="context">LabRenderContext to use</param>
+</member><member name="T:LABjs.Net.LabAction">
+	<summary>
+ Represents an action in the $LAB chain
+ </summary>
+</member><member name="T:LABjs.Net.LabRenderContext">
+	<summary>
+ Used to pass settings between methods during the rendering process
+ </summary>
+	<remarks></remarks>
+</member><member name="M:LABjs.Net.Internal.LabHelper.JSStringEncode(System.String)">
+	<summary>
+ Encodes a string for inclusion in Javascript, replacing all double quotes with escaped double quotes
+ </summary>
+</member><member name="M:LABjs.Net.Internal.LabHelper.GetScriptResourceUrl(System.Web.UI.ScriptManager,System.String,System.Reflection.Assembly)">
+	<summary>
+ Calls the protected GetScriptResourceUrl method on a ScriptManager
+ </summary>
+	<param name="scriptManager">ScriptManager to be used</param>
+	<param name="name">Name of the resource</param>
+	<param name="assembly">Assembly the resource is located in</param>
+	<returns>ScriptResource.axd URL for the resource</returns>
+	<remarks>We use ScriptResource.axd instead of WebResource.axd where possible because it supports gzip compression on older versions of IIS</remarks>
+</member><member name="M:LABjs.Net.Internal.LabHelper.GetDebugPath(System.String,LABjs.Net.LabDebugNameStyle)">
+	<summary>
+ Given a path to a release .js file, returns the path to a debug version
+ </summary>
+	<param name="releasePath">Path to a .js file to be converted to a debug path</param>
+	<param name="debugNameStyle">Type of debug file naming convention to use</param>
+	<remarks>Replaces the trailing .js with .debug.js, accounting for query parameters</remarks>
+</member><member name="F:LABjs.Net.LabAllowDuplicates.Default">
+	<summary>
+ On LabScriptManager, defaults to Yes.  On LabScriptReference, uses the setting on LabScriptManager
+ </summary>
+</member><member name="F:LABjs.Net.LabAllowDuplicates.Yes">
+	<summary>
+ LABjs will not perform duplicate checking
+ </summary>
+</member><member name="F:LABjs.Net.LabAllowDuplicates.No">
+	<summary>
+ LABjs will perform duplicate checking
+ </summary>
+</member><member name="F:LABjs.Net.LabDebugNameStyle.Default">
+	<summary>
+ Inherits the DebugNameStyle from the LabScriptManager
+ </summary>
+	<remarks></remarks>
+</member><member name="F:LABjs.Net.LabDebugNameStyle.AddDebug">
+	<summary>
+ Changes script.js to script.debug.js
+ </summary>
+	<remarks></remarks>
+</member><member name="F:LABjs.Net.LabDebugNameStyle.RemoveMin">
+	<summary>
+ Changes script.min.js to script.js
+ </summary>
+	<remarks></remarks>
+</member>
+</members>
+</doc>
