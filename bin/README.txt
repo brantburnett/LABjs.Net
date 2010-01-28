@@ -1,4 +1,4 @@
-LABjs.Net 1.0rc2
+LABjs.Net 1.0rc3
 Helper library for using ASP.Net with the LABjs library
 1/28/2010
 
@@ -245,7 +245,10 @@ Output Chain Example:
 Change Log
 -----------
 
-1.0rc2
+1.0rc3	1/28/2009
+	Updated to test release 0.1 of cdnLABjs
+
+1.0rc2	1/28/2009
 	Updated cdnLABjs to the latest version
 	Added LabScriptCombine class, which supports ASP.Net AJAX script combining via a reflection hack
 		(Note: As usual, leave it to Microsoft to take perfectly useful functionality and put it where you can't get to it)

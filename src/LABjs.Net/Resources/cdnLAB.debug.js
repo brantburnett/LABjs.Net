@@ -64,7 +64,10 @@
 	append_to[sHEAD] = fGETELEMENTSBYTAGNAME(sHEAD);
 	append_to[sBODY] = fGETELEMENTSBYTAGNAME(sBODY);
 	
-	var isFunc = util.isFunc = function(func) { return fOBJTOSTRING.call(func) === sTYPEFUNC; },
+	// functions added to the $LAB.util namespace
+	var isFunc = util.isFunc = function(func) {
+			return fOBJTOSTRING.call(func) === sTYPEFUNC;
+		},
 		canonicalScriptURI = util.canonicalScriptURI = function(src,base_path) {
 			var regex = /^\w+\:\/\//, ret; 
 			if (typeof src !== sSTRING) src = "";
@@ -79,15 +82,18 @@
 				else sargs[sargs.length] = args[idx];
 			}
 			return sargs;
-		}
-	function sameDomain(src) { return (canonicalScriptURI(src).indexOf(DOCROOT) === 0); }
-	function scriptTagExists(uri) { // checks if a script uri has ever been loaded into this page's DOM
-		var script, idx=-1;
-		while (script = docScripts[++idx]) {
-			if (typeof script.src === sSTRING && uri === canonicalScriptURI(script.src) && script.type !== sSCRIPTCACHE) return bTRUE;
-		}
-		return bFALSE;
-	}
+		},
+		sameDomain = util.sameDomain = function(src) {
+			return (canonicalScriptURI(src).indexOf(DOCROOT) === 0);
+		},
+		scriptTagExists = util.scriptTagExists = function(uri) { // checks if a script uri has ever been loaded into this page's DOM
+			var script, idx=-1;
+			while (script = docScripts[++idx]) {
+				if (typeof script.src === sSTRING && uri === canonicalScriptURI(script.src) && script.type !== sSCRIPTCACHE) return bTRUE;
+			}
+			return bFALSE;
+		};
+		
 	function engine(queueExec,opts) {
 		queueExec = !(!queueExec);
 		if (opts == nNULL) opts = global_defs;
@@ -334,7 +340,7 @@
 		wait:function(){ // will ensure that the chain's previous scripts are executed before execution of scripts in subsequent chain links
 			return engine().wait.apply(nNULL,arguments);
 		},
-		util: util
+		util: util // namespace for utility functions to be used by extensions
 	};
 	global.$LAB.block = global.$LAB.wait;	// alias "block" to "wait" -- "block" is now deprecated
 	
@@ -379,7 +385,11 @@
 		global_cdnWait = 5000 				// global default time to wait for CDN load to complete, in milliseconds
 	;
 	
-	function engine(queueExec, opts, prevEngine) {
+	function engine(queueExec, opts, getEngine) {
+		// getEngine accepts a function which returns the orig_engine to use
+		// Only used if is not null, otherwise a new orig_engine is created
+		// Have to delay acquisition of this engine until the queue is executed, which is why we use a function
+		
 		opts = opts || {};
 		opts[sCDNWAITTIME] = opts[sCDNWAITTIME] || global_cdnWait;
 		
@@ -394,8 +404,6 @@
 			self = this,
 			loaded = bFALSE
 		;
-		
-		self.getEng = function() { return orig_engine; };
 		
 		function getReloads() {
 			var i, j, script, test, props, badLoad,
@@ -431,7 +439,7 @@
 			return result;
 		}
 		function getOrigEngine() {
-			return orig_engine || (prevEngine ? prevEngine.getEng() : orig_$LAB.setOptions(opts));
+			return orig_engine || (getEngine ? getEngine() : orig_$LAB.setOptions(opts));
 		}
 		function finalLoadComplete() {
 		    try { wait_func(); } catch (e) {}
@@ -482,7 +490,7 @@
 					queue = bTRUE;
 				}
 
-				new_engine = engine(queue, opts, queue ? null : self);
+				new_engine = engine(queue, opts, queue ? null : function() { return orig_engine; });
 				triggerNextChain = new_engine.trigger || fNOOP;
 				delete new_engine.trigger;
 
