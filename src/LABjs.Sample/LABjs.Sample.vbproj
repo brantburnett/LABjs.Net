@@ -156,6 +156,7 @@
     <Content Include="Content.aspx" />
     <Content Include="Sample.Master" />
     <Content Include="script.js" />
+    <Content Include="script2.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LABjs.Net\LABjs.Net.vbproj">

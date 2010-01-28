@@ -4,7 +4,7 @@
 ''' Used to insert a set of actions at a specific point in the $LAB chain
 ''' </summary>
 ''' <remarks>Can only be used with a LabScriptManagerProxy</remarks>
-<DefaultProperty("Scripts"), ParseChildren(True, "Actions"), PersistChildren(False)> _
+<ParseChildren(True, "Actions"), PersistChildren(False)> _
 <AspNetHostingPermission(SecurityAction.LinkDemand, Level:=AspNetHostingPermissionLevel.Minimal), AspNetHostingPermission(SecurityAction.InheritanceDemand, Level:=AspNetHostingPermissionLevel.Minimal)> _
 Public Class LabActionGroup
     Inherits LabAction

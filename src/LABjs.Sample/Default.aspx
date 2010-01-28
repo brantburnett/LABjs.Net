@@ -11,10 +11,14 @@
         </asp:ScriptManager>
         <lab:LabScriptManager ID="LabScriptManager1" runat="server">
             <lab:LabScriptReference Path="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js" />
-            <lab:LabScriptReference Path="script.js" />
+            <lab:LabScriptCombine>
+                <lab:LabScriptReference Path="~/script.js" />
+                <lab:LabScriptReference Path="~/script2.js" />
+            </lab:LabScriptCombine>
             <lab:LabWait>
                 <script type="text/javascript">
                     Startup();
+                    Startup2();
                 </script>
             </lab:LabWait>
         </lab:LabScriptManager>

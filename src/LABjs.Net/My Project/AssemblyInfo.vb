@@ -11,8 +11,8 @@ Imports System.Runtime.InteropServices
 <Assembly: ComVisible(False)>
 <Assembly: Guid("6d0e805f-9de7-40d1-af16-d1306338a35b")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.0.0.1")> 
+<Assembly: AssemblyFileVersion("1.0.0.1")> 
 
 <Assembly: WebResource("LABjs.Net.LAB.js", "text/javascript")> 
 <Assembly: WebResource("LABjs.Net.LAB.debug.js", "text/javascript")> 

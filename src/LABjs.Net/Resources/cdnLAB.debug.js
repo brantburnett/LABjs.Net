@@ -391,7 +391,8 @@
 			wait_func = fNOOP,
 			triggerNextChain = fNOOP,
 			load_wait_interval,
-			self = this
+			self = this,
+			loaded = bFALSE
 		;
 		
 		self.getEng = function() { return orig_engine; };
@@ -433,17 +434,21 @@
 			return orig_engine || (prevEngine ? prevEngine.getEng() : orig_$LAB.setOptions(opts));
 		}
 		function finalLoadComplete() {
-			wait_func();
+		    try { wait_func(); } catch (e) {}
 			triggerNextChain();
 		}
 		function initialLoadComplete() {
 			fCLEARTIMEOUT(load_wait_interval);
-			
-			var reloads = getReloads();
-			if (reloads.length)
-				orig_engine = orig_$LAB.setOptions(opts).script(reloads).wait(finalLoadComplete);
-			else
-				finalLoadComplete();
+			if (!loaded) {
+			    // if we're debugging, the timeout may have fired, so don't execute twice
+			    loaded = bTRUE;
+    			
+			    var reloads = getReloads();
+			    if (reloads.length)
+				    orig_$LAB.setOptions(opts).script(reloads).wait(finalLoadComplete);
+			    else
+				    finalLoadComplete();
+	        }
 		}
 		publicAPI = {
 			script:function() {
@@ -495,18 +500,18 @@
 			// if queueing, return a function that the previous chain's waitFunc function can use to trigger this 
 			// engine's queue. NOTE: this trigger function is captured and removed from the public chain API before return
 			publicAPI.trigger = function() {
-				var f, idx=-1;
-				while (f = exec[++idx]) f();
-				exec = [];
+			    var f, idx=-1;
+			    while (f = exec[++idx]) f();
+			    exec = [];
 				
-				if (!hasAlternates)
-				{
-					// Since there are no alternates to wait on, we can go ahead and startup the next chain too
-					triggerNextChain();
-					triggerNextChange = fNOOP;
-				} else
-					// Start waiting for CDN failure
-					load_wait_interval = fSETTIMEOUT(initialLoadComplete, opts[sCDNWAITTIME]);
+			    if (!hasAlternates)
+			    {
+				    // Since there are no alternates to wait on, we can go ahead and startup the next chain too
+				    triggerNextChain();
+				    triggerNextChange = fNOOP;
+			    } else
+				    // Start waiting for CDN failure
+				    load_wait_interval = fSETTIMEOUT(initialLoadComplete, opts[sCDNWAITTIME]);
 			};
 		}
 		return publicAPI;

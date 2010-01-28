@@ -1,5 +1,6 @@
-LABjs.Net 1.0rc1
+LABjs.Net 1.0rc2
 Helper library for using ASP.Net with the LABjs library
+1/28/2010
 
 Licensing
 ----------
@@ -69,6 +70,37 @@ filename to a plain .js.  This is more consistent with the naming standards used
 
 There are also more options, which are passed on to the script() call on the $LAB chain.  For more information
 about these options, please visit the LABjs documentation at <http://labjs.com>.
+
+Combined Scripts
+-----------------
+
+So long as your site is running ASP.Net AJAX, you can also take advantage of script combining.  Note that you aren't
+necessarily required to include a ScriptManager on your page, but you need the modules and handlers in place.  To
+combine a set of scripts, just wrap the LabScriptReference objects in a LabScriptCombine.  The script files
+will be combined into a single file for download via a single HTTP request, in the order they are specified.  No
+matter how many scripts are included in the LabScriptCombine, a single script() call is added to chain.
+
+LabScriptCombine supports the same set of LABjs options to be included in the chain as LabScriptReference does.  Note
+that any LABjs options that you set on the LabScriptRefernce objects inside the combine will be ignored.  Only the
+options on the LabScriptCombine are used.
+
+Note that for the sake of efficiency you should combine the same scripts together at different places on your site,
+and in the same order.  Each combination that you use is a different copy that is downloaded and cached by the client.
+Also, you can only include scripts that are either assembly resources or application relative (using ~/).  Any other
+kind of URL will throw an exception.
+
+Example:
+
+	<lab:LabScriptManager runat="server">
+		<lab:LabScriptReference Path="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js" />
+		<lab:LabWait />
+		<lab:LabScriptReference Path="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js" />
+		<lab:LabWait />
+		<lab:LabScriptCombine>
+			<lab:labScriptReference Path="~/js/script.js" />
+			<lab:labScriptRefernece Path="~/js/script2.js" />
+		</lab:LabScriptCombine>
+	</lab:LabScriptManager>
 
 Wait Functions
 ---------------
@@ -212,6 +244,11 @@ Output Chain Example:
 		
 Change Log
 -----------
+
+1.0rc2
+	Updated cdnLABjs to the latest version
+	Added LabScriptCombine class, which supports ASP.Net AJAX script combining via a reflection hack
+		(Note: As usual, leave it to Microsoft to take perfectly useful functionality and put it where you can't get to it)
 
 1.0rc1
 	Initial testing release

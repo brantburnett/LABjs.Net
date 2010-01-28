@@ -80,6 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.vb" />
+    <Compile Include="Internal\Pair.vb" />
+    <Compile Include="LabScriptReferenceBase.vb" />
+    <Compile Include="LabScriptReferenceCollection.vb" />
     <Compile Include="Internal\LabHelper.vb" />
     <Compile Include="Internal\LabScriptManagerProxyComparer.vb" />
     <Compile Include="LabRenderContext.vb" />
@@ -87,6 +90,7 @@
     <Compile Include="LabException.vb" />
     <Compile Include="LabActionGroup.vb" />
     <Compile Include="LabRenderingEventArgs.vb" />
+    <Compile Include="LabScriptCombine.vb" />
     <Compile Include="LabScriptManager.vb" />
     <Compile Include="LabScriptManagerProxy.vb" />
     <Compile Include="Internal\LabMerge.vb" />
