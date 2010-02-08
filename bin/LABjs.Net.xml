@@ -48,6 +48,15 @@ LABjs.Net
  Specifies an alternate URL to load if the CDN load fails
  </summary>
 	<remarks>Has no effect unless a Test is also specified</remarks>
+</member><member name="P:LABjs.Net.LabScriptReference.AlternateRef">
+	<summary>
+ Specifies an alternate script reference to load if the CDN load fails
+ </summary>
+	<remarks>
+ Has no effect unless a Test is also specified.
+ If this is specified, it is used instead of the Alternate property.
+ This property is defined as a collection, but this is only to make the ASP.Net syntax work for definition in your .aspx file.  Only the first script reference in the collection is used.
+ </remarks>
 </member><member name="P:LABjs.Net.LabScriptReference.Assembly">
 	<summary>
  Assembly name where the script resource is located
@@ -97,11 +106,6 @@ LABjs.Net
 </member><member name="M:LABjs.Net.LabScriptReference.GetUrl(LABjs.Net.LabRenderContext)">
 	<summary>
  Returns the URL to use to reference this script
- </summary>
-	<param name="context">LabRenderContext to use</param>
-</member><member name="M:LABjs.Net.LabScriptReference.GetParameter(LABjs.Net.LabRenderContext)">
-	<summary>
- Gets the parameters to pass to the script() method on $LAB
  </summary>
 	<param name="context">LabRenderContext to use</param>
 </member><member name="T:LABjs.Net.LabScriptReference">
@@ -371,6 +375,16 @@ LABjs.Net
  Returns the list of options to be included in the call to script()
  </summary>
 	<remarks>Be sure to wrap string options in quotes</remarks>
+</member><member name="M:LABjs.Net.LabScriptReferenceBase.GetParameter(LABjs.Net.LabRenderContext)">
+	<summary>
+ Gets the parameters to pass to the script() method on $LAB
+ </summary>
+	<param name="context">LabRenderContext to use</param>
+</member><member name="M:LABjs.Net.LabScriptReferenceBase.GetUrl(LABjs.Net.LabRenderContext)">
+	<summary>
+ Returns the URL to use to reference this script
+ </summary>
+	<param name="context">LabRenderContext to use</param>
 </member><member name="F:LABjs.Net.LabAllowDuplicates.Default">
 	<summary>
  On LabScriptManager, defaults to Yes.  On LabScriptReference, uses the setting on LabScriptManager

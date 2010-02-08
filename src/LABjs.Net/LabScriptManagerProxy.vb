@@ -9,6 +9,26 @@
 Public Class LabScriptManagerProxy
     Inherits Control
 
+#Region "Constructors"
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(ByVal action As LabAction)
+        If action IsNot Nothing Then
+            _actions = New LabActionCollection()
+            _actions.Add(action)
+        End If
+    End Sub
+
+    Public Sub New(ByVal actions As IEnumerable(Of LabAction))
+        If actions IsNot Nothing Then
+            _actions = New LabActionCollection(actions)
+        End If
+    End Sub
+
+#End Region
+
 #Region "Public Properties"
 
     Private _actions As LabActionCollection

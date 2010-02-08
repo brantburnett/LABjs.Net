@@ -82,6 +82,7 @@
     <Compile Include="Constants.vb" />
     <Compile Include="Internal\Pair.vb" />
     <Compile Include="LabScriptReferenceBase.vb" />
+    <Compile Include="LabScriptReferenceBaseCollection.vb" />
     <Compile Include="LabScriptReferenceCollection.vb" />
     <Compile Include="Internal\LabHelper.vb" />
     <Compile Include="Internal\LabScriptManagerProxyComparer.vb" />

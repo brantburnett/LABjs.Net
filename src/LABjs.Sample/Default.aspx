@@ -9,8 +9,10 @@
     <form id="form1" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server">
         </asp:ScriptManager>
-        <lab:LabScriptManager ID="LabScriptManager1" runat="server">
-            <lab:LabScriptReference Path="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js" />
+        <lab:LabScriptManager ID="LabScriptManager1" runat="server" EnableCdnFailover="true">
+            <lab:LabScriptReference Path="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js" Test="jQuery">
+                <lab:LabScriptReference Path="~/jquery-1.4.1.min.js" AllowDuplicates="No" />
+            </lab:LabScriptReference>
             <lab:LabScriptCombine>
                 <lab:LabScriptReference Path="~/script.js" />
                 <lab:LabScriptReference Path="~/script2.js" />

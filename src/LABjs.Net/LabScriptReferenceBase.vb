@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.Specialized
 Imports System.ComponentModel
+Imports System.Text
 
 Imports LABjs.Net.Internal
 
@@ -83,7 +84,7 @@ Public MustInherit Class LabScriptReferenceBase
     Public Overridable Function GetOptions(ByVal context As LabRenderContext) As NameValueCollection
         Dim result As New NameValueCollection()
 
-        If Not String.IsNullOrEmpty(Type) Then
+        If Not String.IsNullOrEmpty(Type) AndAlso Not String.Equals(Type, "text/javascript") Then
             result.Add("type", """" & LabHelper.JSStringEncode(Type) & """")
         End If
         If Not String.IsNullOrEmpty(CharSet) Then
@@ -97,6 +98,46 @@ Public MustInherit Class LabScriptReferenceBase
 
         Return result
     End Function
+
+    ''' <summary>
+    ''' Gets the parameters to pass to the script() method on $LAB
+    ''' </summary>
+    ''' <param name="context">LabRenderContext to use</param>
+    Public Overridable Function GetParameter(ByVal context As LabRenderContext) As String
+        Dim url As String = GetUrl(context)
+
+        Dim options As NameValueCollection = GetOptions(context)
+
+        If options.Count = 0 Then
+            ' No options specified, just return the URL as a string
+            Return """" & LabHelper.JSStringEncode(url) & """"
+        Else
+            Dim sb As New StringBuilder()
+            sb.Append("{src: """)
+            sb.Append(LabHelper.JSStringEncode(url))
+            sb.Append("""")
+
+            For Each key As String In options.Keys
+                sb.Append(","c)
+                sb.Append(key)
+                sb.Append(":"c)
+                sb.Append(options(key))
+            Next
+
+            sb.Append("}")
+            Return sb.ToString()
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Returns the URL to use to reference this script
+    ''' </summary>
+    ''' <param name="context">LabRenderContext to use</param>
+    Public MustOverride Function GetUrl(ByVal context As LabRenderContext) As String
+
+    Public Overrides Sub Render(ByVal writer As System.Text.StringBuilder, ByVal context As LabRenderContext)
+        writer.AppendLine(String.Format(vbTab & ".script({0})", GetParameter(context)))
+    End Sub
 
 #End Region
 

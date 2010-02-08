@@ -15,6 +15,7 @@ Imports LABjs.Net.Internal
 ''' You can refer to a URL using the Path property, or to an assembly resource using the Assembly and Name properties.
 ''' </remarks>
 <AspNetHostingPermission(SecurityAction.LinkDemand, Level:=AspNetHostingPermissionLevel.Minimal), AspNetHostingPermission(SecurityAction.InheritanceDemand, Level:=AspNetHostingPermissionLevel.Minimal)> _
+<ParseChildren(True, "AlternateRef"), PersistChildren(False)> _
 Public Class LabScriptReference
     Inherits LabScriptReferenceBase
 
@@ -122,6 +123,25 @@ Public Class LabScriptReference
         Set(ByVal value As String)
             _alternate = value
         End Set
+    End Property
+
+    Private _alternateRef As LabScriptReferenceBaseCollection
+    ''' <summary>
+    ''' Specifies an alternate script reference to load if the CDN load fails
+    ''' </summary>
+    ''' <remarks>
+    ''' Has no effect unless a Test is also specified.
+    ''' If this is specified, it is used instead of the Alternate property.
+    ''' This property is defined as a collection, but this is only to make the ASP.Net syntax work for definition in your .aspx file.  Only the first script reference in the collection is used.
+    ''' </remarks>
+    <Category("Behavior"), DefaultValue(CStr(Nothing))> _
+    Public ReadOnly Property AlternateRef() As LabScriptReferenceBaseCollection
+        Get
+            If _alternateRef Is Nothing Then
+                _alternateRef = New LabScriptReferenceBaseCollection()
+            End If
+            Return _alternateRef
+        End Get
     End Property
 
     Private _assembly As String
@@ -254,12 +274,24 @@ Public Class LabScriptReference
     Public Overrides Function GetOptions(ByVal context As LabRenderContext) As System.Collections.Specialized.NameValueCollection
         Dim result As NameValueCollection = MyBase.GetOptions(context)
 
-        If Not String.IsNullOrEmpty(Alternate) AndAlso Not String.IsNullOrEmpty(Test) Then
-            result.Add("alt", """" & LabHelper.JSStringEncode(context.Page.ResolveUrl(Alternate)) & """")
-            If Test.StartsWith("function ", StringComparison.Ordinal) Then
-                result.Add("test", Test)
-            Else
-                result.Add("test", """" & LabHelper.JSStringEncode(Test) & """")
+        If Not String.IsNullOrEmpty(Test) Then
+            Dim hasAlt As Boolean = False
+            If _alternateRef IsNot Nothing AndAlso AlternateRef.Count > 0 Then
+                result.Add("alt", AlternateRef(0).GetParameter(context))
+
+                hasAlt = True
+            ElseIf Not String.IsNullOrEmpty(Alternate) Then
+                result.Add("alt", """" & LabHelper.JSStringEncode(context.Page.ResolveUrl(Alternate)) & """")
+
+                hasAlt = True
+            End If
+
+            If hasAlt Then
+                If Test.StartsWith("function ", StringComparison.Ordinal) Then
+                    result.Add("test", Test)
+                Else
+                    result.Add("test", """" & LabHelper.JSStringEncode(Test) & """")
+                End If
             End If
         End If
 
@@ -322,7 +354,7 @@ Public Class LabScriptReference
     ''' Returns the URL to use to reference this script
     ''' </summary>
     ''' <param name="context">LabRenderContext to use</param>
-    Public Overridable Function GetUrl(ByVal context As LabRenderContext) As String
+    Public Overrides Function GetUrl(ByVal context As LabRenderContext) As String
         Dim info As Pair(Of Assembly, String) = GetScriptInfo(context)
 
         If info.First Is Nothing Then
@@ -340,40 +372,6 @@ Public Class LabScriptReference
             End If
         End If
     End Function
-
-    ''' <summary>
-    ''' Gets the parameters to pass to the script() method on $LAB
-    ''' </summary>
-    ''' <param name="context">LabRenderContext to use</param>
-    Public Overridable Function GetParameter(ByVal context As LabRenderContext) As String
-        Dim url As String = GetUrl(context)
-
-        Dim options As NameValueCollection = GetOptions(context)
-
-        If options.Count = 0 Then
-            ' No options specified, just return the URL as a string
-            Return """" & LabHelper.JSStringEncode(url) & """"
-        Else
-            Dim sb As New StringBuilder()
-            sb.Append("{src: """)
-            sb.Append(LabHelper.JSStringEncode(url))
-            sb.Append("""")
-
-            For Each key As String In options.Keys
-                sb.Append(","c)
-                sb.Append(key)
-                sb.Append(":"c)
-                sb.Append(options(key))
-            Next
-
-            sb.Append("}")
-            Return sb.ToString()
-        End If
-    End Function
-
-    Public Overrides Sub Render(ByVal writer As StringBuilder, ByVal context As LabRenderContext)
-        writer.AppendLine(String.Format(vbTab & ".script({0})", GetParameter(context)))
-    End Sub
 
 #End Region
 

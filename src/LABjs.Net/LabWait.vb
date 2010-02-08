@@ -26,6 +26,7 @@ Public Class LabWait
 
     Public Sub New(ByVal inlineScript As String)
         _inlineScript = inlineScript
+        _detectScriptTags = False
     End Sub
 
 #End Region

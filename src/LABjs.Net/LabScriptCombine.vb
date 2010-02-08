@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.Specialized
 Imports System.ComponentModel
 Imports System.Reflection
+Imports System.Text
 
 Imports LABjs.Net.Internal
 
@@ -15,6 +16,19 @@ Imports LABjs.Net.Internal
 <AspNetHostingPermission(SecurityAction.LinkDemand, Level:=AspNetHostingPermissionLevel.Minimal), AspNetHostingPermission(SecurityAction.InheritanceDemand, Level:=AspNetHostingPermissionLevel.Minimal)> _
 Public Class LabScriptCombine
     Inherits LabScriptReferenceBase
+
+#Region "Constructors"
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(ByVal scripts As IEnumerable(Of LabScriptReference))
+        If scripts IsNot Nothing Then
+            scripts = New LabScriptReferenceCollection(scripts)
+        End If
+    End Sub
+
+#End Region
 
 #Region "Public Properties"
 
@@ -39,7 +53,7 @@ Public Class LabScriptCombine
 
 #Region "Public Methods"
 
-    Public Overrides Sub Render(ByVal writer As System.Text.StringBuilder, ByVal context As LabRenderContext)
+    Public Overrides Function GetUrl(ByVal context As LabRenderContext) As String
         If Scripts.Count > 0 Then
             Dim list As New List(Of Pair(Of Assembly, List(Of String)))
             For Each script As LabScriptReference In Scripts
@@ -61,28 +75,11 @@ Public Class LabScriptCombine
                 End If
             Next
 
-            Dim options As NameValueCollection = GetOptions(context)
-
-            If options.Count = 0 Then
-                writer.Append(vbTab & ".script(""")
-                writer.Append(LabHelper.GetCombinedScriptResourceUrl(list))
-                writer.Append(""")")
-            Else
-                writer.Append(vbTab & ".script({src:""")
-                writer.Append(LabHelper.GetCombinedScriptResourceUrl(list))
-                writer.Append("""")
-
-                For Each key As String In options.Keys
-                    writer.Append(","c)
-                    writer.Append(key)
-                    writer.Append(":"c)
-                    writer.Append(options(key))
-                Next
-
-                writer.Append("})")
-            End If
+            Return LabHelper.GetCombinedScriptResourceUrl(list)
+        Else
+            Return String.Empty
         End If
-    End Sub
+    End Function
 
 #End Region
 

@@ -1,6 +1,6 @@
-LABjs.Net 1.0rc3
+LABjs.Net 1.0rc4
 Helper library for using ASP.Net with the LABjs library
-1/28/2010
+2/8/2010
 
 Licensing
 ----------
@@ -245,10 +245,22 @@ Output Chain Example:
 Change Log
 -----------
 
-1.0rc3	1/28/2009
+1.0rc4	2/8/2010
+	Added some useful constructors for building LABjs chains in code
+	Fixed type parameter always being output for all scripts
+	Fixed LabScriptCombine output not including a newline
+	Made LabWait objects created in code using the constructor with the inlineScript parameter default to
+		not automatically detect <script> tags, since this is mostly only useful with LabWait objects
+		included in the .aspx file.
+	Added support for AlternateRef to LabScriptReference so you can define additional LABjs parameters for
+		CDN failover alternate script (including failover chaining between multiple CDNs if you want to,
+		though that could introduce really long delays).
+	Moved some common code to ScriptReferenceBase
+
+1.0rc3	1/28/2010
 	Updated to test release 0.1 of cdnLABjs
 
-1.0rc2	1/28/2009
+1.0rc2	1/28/2010
 	Updated cdnLABjs to the latest version
 	Added LabScriptCombine class, which supports ASP.Net AJAX script combining via a reflection hack
 		(Note: As usual, leave it to Microsoft to take perfectly useful functionality and put it where you can't get to it)

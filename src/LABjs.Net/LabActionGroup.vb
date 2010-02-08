@@ -9,6 +9,34 @@
 Public Class LabActionGroup
     Inherits LabAction
 
+#Region "Constructors"
+
+    Public Sub New()
+    End Sub
+
+    Public Sub New(ByVal insertAt As String)
+        _insertAt = insertAt
+    End Sub
+
+    Public Sub New(ByVal insertAt As String, ByVal action As LabAction)
+        _insertAt = insertAt
+
+        If action IsNot Nothing Then
+            _actions = New LabActionCollection()
+            _actions.Add(action)
+        End If
+    End Sub
+
+    Public Sub New(ByVal insertAt As String, ByVal actions As IEnumerable(Of LabAction))
+        _insertAt = insertAt
+
+        If actions IsNot Nothing Then
+            _actions = New LabActionCollection(actions)
+        End If
+    End Sub
+
+#End Region
+
 #Region "Public Properties"
 
     Private _insertAt As String = String.Empty
