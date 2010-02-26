@@ -47,6 +47,22 @@ Namespace Internal
             End Get
         End Property
 
+        Private _ignoreEmptyWait As Boolean = False
+        Public Property IgnoreEmptyWait() As Boolean
+            Get
+                Return _ignoreEmptyWait
+            End Get
+            Set(ByVal value As Boolean)
+                _ignoreEmptyWait = value
+            End Set
+        End Property
+
+        Public ReadOnly Property IsEmptyWait() As Boolean
+            Get
+                Return _waits.Count = 0 OrElse _waits.All(Function(p) p.IsEmpty)
+            End Get
+        End Property
+
 #End Region
 
 #Region "Public Methods"
@@ -71,7 +87,9 @@ Namespace Internal
             Next
 
             If Not hasScript Then
-                writer.AppendLine(vbTab & ".wait()")
+                If Not IgnoreEmptyWait Then
+                    writer.AppendLine(vbTab & ".wait()")
+                End If
             Else
                 writer.AppendLine(vbTab & ".wait(function() {")
                 writer.Append(script.ToString())

@@ -467,8 +467,17 @@ Public Class LabScriptManager
             Dim action As LabAction = actions(i)
 
             If TypeOf action Is LabMerge Then
-                previous = action
-                i += 1
+                If TypeOf previous Is LabWait AndAlso DirectCast(action, LabMerge).Actions.Count = 0 Then
+                    DirectCast(action, LabMerge).Waits.Insert(0, previous)
+                    previous = action
+                    actions.RemoveAt(i - 1)
+                ElseIf TypeOf previous Is LabMerge AndAlso DirectCast(action, LabMerge).Actions.Count = 0 Then
+                    DirectCast(previous, LabMerge).Waits.AddRange(DirectCast(action, LabMerge).Waits)
+                    actions.RemoveAt(i)
+                Else
+                    previous = action
+                    i += 1
+                End If
             ElseIf TypeOf action Is LabWait Then
                 If TypeOf previous Is LabMerge Then
                     DirectCast(previous, LabMerge).Waits.Add(action)
@@ -493,8 +502,9 @@ Public Class LabScriptManager
         End While
 
         ' Remove final action if it's an empty wait, there's no need
-        Dim lastWait As LabWait = TryCast(previous, LabWait)
-        If lastWait IsNot Nothing AndAlso lastWait.IsEmpty Then
+        If TypeOf previous Is LabMerge Then
+            DirectCast(previous, LabMerge).IgnoreEmptyWait = True
+        ElseIf TypeOf previous Is LabWait AndAlso DirectCast(previous, LabWait).IsEmpty Then
             actions.RemoveAt(actions.Count - 1)
         End If
     End Sub

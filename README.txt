@@ -1,6 +1,6 @@
-LABjs.Net 1.0rc4
+LABjs.Net 1.0rc5
 Helper library for using ASP.Net with the LABjs library
-2/8/2010
+2/26/2010
 
 Licensing
 ----------
@@ -244,6 +244,10 @@ Output Chain Example:
 		
 Change Log
 -----------
+
+1.0rc5	2/26/2010
+	Fixed an issue with adjacent named waits not always being merged into a single wait call, which could
+		cause callback functions to not execute
 
 1.0rc4	2/8/2010
 	Added some useful constructors for building LABjs chains in code
