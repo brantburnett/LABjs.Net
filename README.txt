@@ -1,6 +1,6 @@
-LABjs.Net 1.0rc5
+LABjs.Net 1.1
 Helper library for using ASP.Net with the LABjs library
-2/26/2010
+12/20/2010
 
 Licensing
 ----------
@@ -244,6 +244,9 @@ Output Chain Example:
 		
 Change Log
 -----------
+
+1.1		12/20/2010
+	Moved to LABjs 1.0.4 (which includes compatibility with Firefox 4.0b8)
 
 1.0rc5	2/26/2010
 	Fixed an issue with adjacent named waits not always being merged into a single wait call, which could
